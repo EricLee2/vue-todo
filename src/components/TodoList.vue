@@ -2,29 +2,43 @@
   <div>
     <transition-group name="list" tag="ul">
     
-        <li v-for="(todoItem, index) in propsdata" v-bind:key="todoItem.item" class="shadow">
+        <li v-for="(todoItem, index) in this.todoItemsFromGetters" v-bind:key="todoItem.item" class="shadow">
             <i class="checkBtn fas fa-check" v-bind:class="{checkBtnCompleted:todoItem.completed}" 
                 v-on:click="toggleComplete(todoItem, index)"></i>
             <span v-bind:class="{textCompleted: todoItem.completed}"> {{ todoItem.item }} </span>
             <span class="removeBtn" v-on:click="removeTodo(todoItem, index)">
                 <i class="fas fa-trash-alt">d</i>
-                
             </span>
-            
         </li>
     </transition-group>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-    props: ['propsdata'],
+    computed: {
+        // todoItemsFromGetters() {
+        //     // 사용 시 인자값이 필요 없다...자동기입 됨 
+        //     return this.$store.getters.storedTodoItems;
+        // }
+        // 왜 가져오는 storedTodoItems가 single quotes 안에 들어가나??? 
+        ...mapGetters({todoItemsFromGetters: 'storedTodoItems'})
+    },
     methods: {
         removeTodo: function(todoItem, index) {
-            this.$emit('removeItem', todoItem, index);
+            // this.$emit('removeItem', todoItem, index);
+            var obj = {
+                todoItem: todoItem,
+                index: index
+            };
+            this.$store.commit('removeOneItem', obj);
+            // this.$store.commit('removeOneItem', {todoItem, index});
         }, 
         toggleComplete: function(todoItem, index) {
-            this.$emit('toggleItem', todoItem, index);
+            // this.$emit('toggleItem', todoItem, index);
+            this.$store.commit('toggleOneItem', {todoItem, index})
         }
     }
 }
