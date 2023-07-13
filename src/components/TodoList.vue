@@ -4,9 +4,9 @@
     
         <li v-for="(todoItem, index) in this.todoItemsFromGetters" v-bind:key="todoItem.item" class="shadow">
             <i class="checkBtn fas fa-check" v-bind:class="{checkBtnCompleted:todoItem.completed}" 
-                v-on:click="toggleComplete(todoItem, index)"></i>
+                v-on:click="toggleComplete({todoItem, index})"></i>
             <span v-bind:class="{textCompleted: todoItem.completed}"> {{ todoItem.item }} </span>
-            <span class="removeBtn" v-on:click="removeTodo(todoItem, index)">
+            <span class="removeBtn" v-on:click="removeTodo({todoItem, index})">
                 <i class="fas fa-trash-alt">d</i>
             </span>
         </li>
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters , mapMutations } from 'vuex'
 
 export default {
     computed: {
@@ -27,19 +27,23 @@ export default {
         ...mapGetters({todoItemsFromGetters: 'storedTodoItems'})
     },
     methods: {
-        removeTodo: function(todoItem, index) {
-            // this.$emit('removeItem', todoItem, index);
-            var obj = {
-                todoItem: todoItem,
-                index: index
-            };
-            this.$store.commit('removeOneItem', obj);
-            // this.$store.commit('removeOneItem', {todoItem, index});
-        }, 
-        toggleComplete: function(todoItem, index) {
-            // this.$emit('toggleItem', todoItem, index);
-            this.$store.commit('toggleOneItem', {todoItem, index})
-        }
+        ...mapMutations({
+          removeTodo: 'removeOneItem',  // 아래 removeTodo 함수를 완전히 대체함...
+          toggleComplete: 'toggleOneItem'
+        }),
+        // removeTodo: function(todoItem, index) {
+        //     // this.$emit('removeItem', todoItem, index);
+        //     var obj = {
+        //         todoItem: todoItem,
+        //         index: index
+        //     };
+        //     this.$store.commit('removeOneItem', obj);
+        //     // this.$store.commit('removeOneItem', {todoItem, index});
+        // }, 
+        // toggleComplete: function(todoItem, index) {
+        //     // this.$emit('toggleItem', todoItem, index);
+        //     this.$store.commit('toggleOneItem', {todoItem, index})
+        // }
     }
 }
 </script>
