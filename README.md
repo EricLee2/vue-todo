@@ -5,6 +5,11 @@
 npm install
 ```
 
+```
+npm i vuex@3.6.2
+```
+
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
